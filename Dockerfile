@@ -13,9 +13,10 @@ ENV NODE_ENV=production DB_HOST=item-db
 # Menginstal dependencies untuk production dan kemudian build aplikasi
 RUN npm install --production --unsafe-perm && npm run build
 
-# Mengeksekusi perintah untuk menjalankan aplikasi yang berarti node app.js bila pada shell dan # Menjalankan server saat container diluncurkan
-CMD ["node", "app.js"]
-
-
 # Ekspos port yang digunakan oleh aplikasi, yaitu 8080
 EXPOSE 8080
+
+# Menjalankan server saat container diluncurkan
+CMD ["npm", "start"]
+
+

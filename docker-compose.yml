@@ -5,19 +5,16 @@ version: "3.8"
 services:
   # Nama service pertama
   item-app:
-    # memberi nama container
-    container_name: item-app
-    # Menggunakan image node 14 dengan tag alpline (versi ringan) untuk membuat service
-    image: node:14.21.3-alpine3.17
+    # Menggunakan image dari GitHub Packages
+    image: ghcr.io/amedfauzi/item-app:v1
     # restart policy ketika container terhenti (merestart otomatis ketika terhenti)
     restart: unless-stopped
-    command: sh -c "npm install --unsafe-perm && npm run start"
-    # menunggu item-db berjalan sebelum item-app running
+    # menunggu item-db diluncurkan sebelum item-app running
     depends_on:
       - item-db
     # Melakukan port mapping agar dapat diakses dari port 80 di host
     ports:
-      - 80:3000
+      - 80:8080
     # Menentukan working directory sebagai folder utama app
     working_dir: /app
     
@@ -28,13 +25,10 @@ services:
     # Menentukan environment variabel lokasi database
     environment:
       - DB_HOST=item-db
-      - DB_NAME=$MONGODB_DATABASE
-      - DB_PORT=$MONGODB_DOCKER_PORT
 
   # Nama service kedua
   item-db:
-    # memberi nama container
-    container_name: item-db
+    # Menggunakan MongoDB versi 3
     image: mongo:3
     # restart policy ketika container terhenti
     restart: unless-stopped
