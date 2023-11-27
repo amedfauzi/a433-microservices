@@ -1,0 +1,50 @@
+# Menentukan scheme version dari Docker Compose
+version: "3.8"
+
+# Membuat list services (app) yang akan dibuat
+services:
+  # Nama service pertama
+  item-app:
+    # memberi nama container
+    container_name: item-app
+    # Menggunakan image node 14 dengan tag alpline (versi ringan) untuk membuat service
+    image: node:14.21.3-alpine3.17
+    # restart policy ketika container terhenti (merestart otomatis ketika terhenti)
+    restart: unless-stopped
+    command: sh -c "npm install --unsafe-perm && npm run start"
+    # menunggu item-db berjalan sebelum item-app running
+    depends_on:
+      - item-db
+    # Melakukan port mapping agar dapat diakses dari port 80 di host
+    ports:
+      - 80:3000
+    # Menentukan working directory sebagai folder utama app
+    working_dir: /app
+    
+    # menggunakan bind mount untuk memasang current directory di host alih-alih menggunakan full path
+    volumes:
+      - ./:/app
+
+    # Menentukan environment variabel lokasi database
+    environment:
+      - DB_HOST=item-db
+      - DB_NAME=$MONGODB_DATABASE
+      - DB_PORT=$MONGODB_DOCKER_PORT
+
+  # Nama service kedua
+  item-db:
+    # memberi nama container
+    container_name: item-db
+    image: mongo:3
+    # restart policy ketika container terhenti
+    restart: unless-stopped
+    # Mengekspos port 27017 pada host dan container untuk mongodb 
+    ports:
+      - '27017:27017'
+    # menggunakan bind mount untuk memasang current directory di host alih-alih menggunakan full path
+    volumes:
+      - app-db:/data/db
+
+# Membuat volume baru yang akan digunakan MongoDB
+volumes:
+  app-db:
