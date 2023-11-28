@@ -15,26 +15,13 @@ services:
     # Melakukan port mapping agar dapat diakses dari port 80 di host
     ports:
       - 80:8080
-    # Menentukan working directory sebagai folder utama app
-    working_dir: /app
-    
-    # menggunakan bind mount untuk memasang current directory di host alih-alih menggunakan full path
-    volumes:
-      - ./:/app
-
-    # Menentukan environment variabel lokasi database
-    environment:
-      - DB_HOST=item-db
-
+      
   # Nama service kedua
   item-db:
     # Menggunakan MongoDB versi 3
     image: mongo:3
     # restart policy ketika container terhenti
     restart: unless-stopped
-    # Mengekspos port 27017 pada host dan container untuk mongodb 
-    ports:
-      - '27017:27017'
     # menggunakan bind mount untuk memasang current directory di host alih-alih menggunakan full path
     volumes:
       - app-db:/data/db

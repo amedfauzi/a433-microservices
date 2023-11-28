@@ -10,7 +10,7 @@ image_name="item-app:v1"
 
 
 # Login ke GitHub
-export CR_PAT=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
+export CR_PAT=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
 echo $CR_PAT | docker login ghcr.io -u amedfauzi --password-stdin
 
 # Mengunggah ke Github Packages
